@@ -1,8 +1,10 @@
 package com.bridgelabz.DatabaseTesting;
+import org.junit.Assert;
 import org.junit.Test;
 import java.sql.*;
 
 public class DbTesting {
+
     @Test
     public void get_table_data() throws ClassNotFoundException, SQLException {
         //Driver loaded
@@ -13,14 +15,15 @@ public class DbTesting {
         Statement smt = con.createStatement();
         //Query Executed
         ResultSet rs = smt.executeQuery("select * from user");
-
+        int count = 0;
         while (rs.next()) {
             int id = rs.getInt(1);
             String name = rs.getString(2);
             String userType = rs.getString(3);
             System.out.println(id + " " + name + " " + userType);
-
+            count++;
         }
+        Assert.assertEquals(4,count);
     }
 
     @Test
@@ -47,10 +50,20 @@ public class DbTesting {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_Testing", "root", "1234567890");
         //Statement created
         PreparedStatement pst=con.prepareStatement("UPDATE user SET name = ? WHERE user_id = ?");
-
         pst.setString(1,"ramesh");
         pst.setInt(2,3);
         pst.executeUpdate();
+
+        ResultSet rs = pst.executeQuery("select * from user where user_id = 3");
+        int count = 0;
+        while (rs.next()) {
+            int id = rs.getInt(1);
+            String name = rs.getString(2);
+            String userType = rs.getString(3);
+            System.out.println(id + " " + name + " " + userType);
+            count++;
+        }
+
     }
 
     @Test
@@ -63,6 +76,7 @@ public class DbTesting {
         PreparedStatement pst=con.prepareStatement("DELETE FROM user WHERE user_id = ?");
         pst.setInt(1,4);
         pst.executeUpdate();
+
     }
 }
 

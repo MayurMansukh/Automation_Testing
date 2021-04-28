@@ -9,40 +9,42 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
 
 public class RestAssuredTest {
-    String Token = "";
+    String token = " ";
+    String user_id = " ";
 
     @BeforeTest // set the Token
     public void setup() {
-        Token = "Bearer BQB7zsnbxd-qS5ZLWw5-VT_v90-CvKr-gSKcbg8xvdJe59HCmPcciVPvrqGFwKt4LA6RqGGePu-W2Kj7sBohVe4HUwpcVtgJkjRAKtUKzHxxWS1Ipq_UD30WxeiUB3i-II-_g7TQNuzW8hkS86NrqJpCRHu9Q4cu6RG8wHsFI_PB9k-5B5EAB8ugDYW1ikcZjB2K4Smw1BDanO5g_ZekIWvDwfDk7Mo-mrfwr8dnZ2vSCYVP5beAF0r2ek_Mon-ns7JUrP4U8VSDYahPFZ-RyUjsnLq-v4N-nfImTrkC";
+        token = "Bearer BQCRUBHMrUNxSio8zOENg_aFkoLfi-LC7KdqvFHmiyvRgWdtsNTbpcFmo9Me9uWl-l-PsVNn6HA6Mr39KeNBSTT-DzMj81GNoX1hB_B4g46TNJS5W9RoemdmdnxHoP6Stg3lhggWNGYXFbnvE4-o46pN5E4lqQUvjHKxuujdGPV1IM455Lti0cewegTBC_cUV9edSwE1k3r7ZmV5GigVVgcMccjq06awy2rO9GTbGIFxkCMDHEzuc3GiB5Cs2mxa3SwCtUxqecXBYosrFLExCrfy8FxQYDbAd9UYhyVX";
     }
 
-    @Test
+    @Test(priority = 1)
     public void get_current_user_profile() { // get current user profile using get request
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
-                .header("Authorization", Token)
+                .header("Authorization", token)
                 .when()
                 .get("https://api.spotify.com/v1/me");
 
         response.prettyPrint();
         int statusCode=response.getStatusCode();
-        String userId = response.path("id");
+        user_id = response.path("id");
         Assert.assertEquals(200,statusCode);
-        Assert.assertEquals("bu9yalxad2wzqjhm294upqeb0",userId);
+        Assert.assertEquals("bu9yalxad2wzqjhm294upqeb0",user_id);
+
+
     }
 
-    @Test
+    @Test(priority = 2)
     public void get_User_Profile2() { // get user profile using get request with hardCode UserId
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
-                .header("Authorization", Token)
+                .header("Authorization", token)
                 .when()
-                .get("https://api.spotify.com/v1/users/bu9yalxad2wzqjhm294upqeb0");
+                .get("https://api.spotify.com/v1/users/"+user_id+"/");
 
         response.prettyPrint();
-
         int statusCode = response.getStatusCode();
         String userId = response.path("id");
         String name = response.path("display_name");
@@ -64,10 +66,10 @@ public class RestAssuredTest {
                 //.body(request.toJSONString())
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
-                .header("Authorization", Token)
+                .header("Authorization", token)
                 .body("{\"name\":\"DDLJ SONGS\",\"description\":\"OLD MOVIE SONGS\",\"public\":\"false\"}")
                 .when()
-                .post("https://api.spotify.com/v1/users/bu9yalxad2wzqjhm294upqeb0/playlists");
+                .post("https://api.spotify.com/v1/users/"+user_id+"/playlists");
 
         response.prettyPrint();
         int statusCode = response.getStatusCode();
@@ -85,7 +87,7 @@ public class RestAssuredTest {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
-                .header("Authorization", Token)
+                .header("Authorization", token)
                 .when()
                 .post("https://api.spotify.com/v1/playlists/0ibWqOyk7D7p8ZLB924idC/tracks?uris=spotify:track:018eOid2aGaPdxon7T6GsC");
 
